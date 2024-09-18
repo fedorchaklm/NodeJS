@@ -1,6 +1,5 @@
 import express from "express";
 import crypto from "crypto";
-
 import { users } from "../storage.js";
 import { USER_ID_HEADER } from "../constants.js";
 

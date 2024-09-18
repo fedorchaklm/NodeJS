@@ -1,16 +1,13 @@
 import express from "express";
 import bodyParser from "body-parser";
-// import cors from "cors";
 import registerRouter from "./routers/register.js";
 import productsRouter from "./routers/products.js";
 import cartRouter from "./routers/cart.js";
-import { products, getCart } from "./storage.js";
-import { PORT, USER_ID_HEADER } from "./constants.js";
+import { PORT } from "./constants.js";
 
 const app = express();
 
 app.use(bodyParser.json());
-// app.use(cors());
 
 app.use("/api/register", registerRouter);
 app.use("/api/products", productsRouter);

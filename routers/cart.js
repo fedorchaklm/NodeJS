@@ -7,17 +7,13 @@ const router = express.Router();
 router.put("/:productId", (req, res) => {
   const userId = req.headers[USER_ID_HEADER];
   const productId = Number(req.params.productId);
-
   if (!userId) {
     return res.status(401).send("Unauthorized");
   }
-
   const product = products.find(({ id }) => id === productId);
-
   if (!product) {
     return res.status(404).send("Product not found");
   }
-
   const cart = getCart(userId);
   cart.products.push(product);
   res.status(200).json(cart);

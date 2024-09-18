@@ -67,11 +67,11 @@ export const products = [
 ];
 
 export const users = [
-  {
-    id: "1548132f-5cdd-4200-9af0-35df03f47efb",
-    name: "Anna Jones",
-    email: "ann.jones@epam.com",
-  },
+  // {
+  //   id: "1548132f-5cdd-4200-9af0-35df03f47efb",
+  //   name: "Anna Jones",
+  //   email: "ann.jones@epam.com",
+  // },
 ]; // store the list of users here
 
 export const carts = []; // list of carts
