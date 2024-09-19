@@ -66,17 +66,11 @@ export const products = [
   },
 ];
 
-export const users = [
-  // {
-  //   id: "1548132f-5cdd-4200-9af0-35df03f47efb",
-  //   name: "Anna Jones",
-  //   email: "ann.jones@epam.com",
-  // },
-]; // store the list of users here
+export const users = [];
 
-export const carts = []; // list of carts
+export const carts = [];
 
-export const orders = []; // list of crated orders
+export const orders = [];
 
 export function getCart(userId) {
   let cart = carts.find((cart) => cart.userId === userId);
