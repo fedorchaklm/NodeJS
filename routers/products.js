@@ -10,6 +10,9 @@ router.get("/", (_, res) => {
 router.get("/:productId", (req, res) => {
   const productId = Number(req.params.productId);
   const product = products.find(({ id }) => id === productId);
+  if (!product) {
+    return res.status(404).send("Product not found");
+  }
   res.status(200).json(product);
 });
 

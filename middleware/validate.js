@@ -9,18 +9,10 @@ export const isValidPassword = (password) => {
   return regexp.test(password);
 };
 
-export const validateEmail = (req, res, next) => {
-  const { email } = req.body;
-  if (!isValidEmail(email)) {
-    return res.status(422).send("Email format is invalid");
-  }
-  return next();
-};
-
-export const validatePassword = (req, res, next) => {
-  const { password } = req.body;
-  if (!isValidPassword(password)) {
-    return res.status(422).send("Password format is invalid");
+export const validateRegisterData = (req, res, next) => {
+  const { email, password } = req.body;
+  if (!isValidEmail(email) || !isValidPassword(password)) {
+    return res.status(422).send('Email or password format is invalid');
   }
   return next();
 };
