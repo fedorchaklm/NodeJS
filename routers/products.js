@@ -1,5 +1,6 @@
 import express from "express";
 import { products } from "../storage.js";
+import { NotFoundError } from "../common/errors.js";
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.get("/:productId", (req, res) => {
   const productId = Number(req.params.productId);
   const product = products.find(({ id }) => id === productId);
   if (!product) {
-    return res.status(404).send("Product not found");
+    throw new NotFoundError();
   }
   res.status(200).json(product);
 });

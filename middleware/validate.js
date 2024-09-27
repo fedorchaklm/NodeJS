@@ -1,18 +1,26 @@
-export const isValidEmail = (email) => {
-  const regexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
-  return email.length <= 254 && regexp.test(email);
-};
+import Joi from "joi";
 
-export const isValidPassword = (password) => {
-  const regexp =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-  return regexp.test(password);
-};
+const schema = Joi.object({
+  name: Joi.string().min(3).max(30).required(),
+
+  email: Joi.string()
+    .max(254)
+    .pattern(new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-z]{2,}$"))
+    .required(),
+
+  password: Joi.string()
+    .min(8)
+    .pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/)
+    .required(),
+});
 
 export const validateRegisterData = (req, res, next) => {
-  const { email, password } = req.body;
-  if (!isValidEmail(email) || !isValidPassword(password)) {
-    return res.status(422).send('Email or password format is invalid');
+  const result = schema.validate(req.body);
+  const { error } = result;
+  const isValid = error == null;
+  if (isValid) {
+    return next();
+  } else {
+    return res.status(422).send("Email or password format is invalid");
   }
-  return next();
 };
