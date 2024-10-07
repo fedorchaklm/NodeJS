@@ -12,7 +12,7 @@ const router = express.Router();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const productsStoreFilePath = path.join(__dirname, "../products.store.json");
+const productsStoreFilePath = path.join(__dirname, "..", "products.store.json");
 
 router.get("/", (_, res) => {
   res.status(200).json(products);
@@ -42,7 +42,19 @@ router.post("/", (req, res) => {
 });
 
 router.post("/import", (req, res) => {
+  let result = {};
+
   const writableStream = fs.createWriteStream(productsStoreFilePath);
+
+  writableStream.on("close", () => {
+    if (result.error) {
+      eventEmitter.emit("fileUploadFailed", result.error);
+      return res.status(result.code).send(result.error.message);
+    }
+    eventEmitter.emit("fileUploadEnd");
+    res.status(result.code).send(result.message);
+  });
+
   let lastItem = null;
 
   eventEmitter.emit("fileUploadStart");
@@ -57,14 +69,12 @@ router.post("/import", (req, res) => {
     })
     .on("end", () => {
       if (lastItem == null) {
-        eventEmitter.emit("fileUploadFailed", Error("File wasn't provided"));
-        res.status(400).send("File is required!");
+        result = { code: 400, error: Error("File wasn't provided") };
       } else {
         writableStream.write(`${JSON.stringify(lastItem)}]`);
-        // writableStream.close();
-        eventEmitter.emit("fileUploadEnd");
-        res.send("File has been uploaded successfully!");
+        result = { code: 200, message: "File has been uploaded successfully!" };
       }
+      writableStream.close();
     });
 });
 export default router;

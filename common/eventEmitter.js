@@ -8,7 +8,7 @@ const eventEmitter = new EventEmitter();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const filePath = path.join(__dirname, "../filesUpload.log");
+const filePath = path.join(__dirname, "..", "filesUpload.log");
 
 function addLog(message) {
   fs.appendFile(filePath,`${getCurrentDate()} - ${message};\n`, (err) => {

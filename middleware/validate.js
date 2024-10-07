@@ -15,10 +15,8 @@ const schema = Joi.object({
 });
 
 export const validateRegisterData = (req, res, next) => {
-  const result = schema.validate(req.body);
-  const { error } = result;
-  const isValid = error == null;
-  if (isValid) {
+  const { error } = schema.validate(req.body);
+  if (!error) {
     return next();
   } else {
     return res.status(422).send("Email or password format is invalid");
