@@ -1,6 +1,7 @@
 import express from "express";
 import { products, getCart } from "../storage.js";
 import { currentUser } from "../middleware/currentUser.js";
+import { NotFoundError } from "../common/errors.js";
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.put("/:productId", currentUser, (req, res) => {
   const productId = Number(req.params.productId);
   const product = products.find(({ id }) => id === productId);
   if (!product) {
-    return res.status(404).send("Product not found");
+    throw new NotFoundError();
   }
   const cart = getCart(userId);
   cart.products.push(product);
