@@ -1,5 +1,9 @@
-const errorHandler =  (error, _, res, next) => {
-  res.status(error.statusCode || 500).json(
+import { NextFunction, Response } from "express";
+import { HttpError } from "../common/errors";
+
+const errorHandler =  (error: Error, _, res: Response, next: NextFunction) => {
+  const { statusCode } = error as HttpError
+  res.status(statusCode || 500).json(
     {
       message: error.message
     }

@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const filePath = path.join(__dirname, "../logs/", config.logFile);
 
-function addLog(message) {
+function addLog(message: string) {
   fs.appendFile(filePath,`${getCurrentDate()} - ${message};\n`, (err) => {
     if (err) {
       throw new Error(err.message);
