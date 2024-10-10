@@ -1,34 +1,26 @@
-import express from "express";
-import { products } from "../storage.js";
-import { NotFoundError } from "../common/errors.js";
+import * as productRepository from "../repositories/product.repository.js";
 import fs from "fs";
-import { randomUUID } from "crypto";
-import csv from "csv-parser";
 import { fileURLToPath } from "url";
 import path from "path";
+import { randomUUID } from "crypto";
 import eventEmitter from "../common/eventEmitter.js";
-
-const router = express.Router();
+import csv from "csv-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const productsStoreFilePath = path.join(__dirname, "..", "products.store.json");
 
-router.get("/", (_, res) => {
-  res.status(200).json(products);
-});
+export const getAllProducts = () => {
+  const products = productRepository.getProducts();
+  return products;
+};
 
-router.get("/:productId", (req, res) => {
-  const productId = Number(req.params.productId);
-  const product = products.find(({ id }) => id === productId);
-  if (!product) {
-    throw new NotFoundError();
-  }
-  res.status(200).json(product);
-});
+export const getProductById = (productId) => {
+  const product = productRepository.getProductById(productId);
+  return product;
+};
 
-router.post("/", (req, res) => {
-  const { name, description, category, price } = req.body;
+export const addProduct = ({ name, description, category, price }) => {
   const product = { id: randomUUID(), name, description, category, price };
   try {
     const data = fs.readFileSync(productsStoreFilePath, "utf-8");
@@ -38,10 +30,10 @@ router.post("/", (req, res) => {
   } catch (err) {
     throw new Error(err.message);
   }
-  res.status(200).json(product);
-});
+  return product;
+};
 
-router.post("/import", (req, res) => {
+export const transformCsvToJson = (req, res) => {
   let result = {};
 
   const writableStream = fs.createWriteStream(productsStoreFilePath);
@@ -76,5 +68,4 @@ router.post("/import", (req, res) => {
       }
       writableStream.close();
     });
-});
-export default router;
+};

@@ -3,12 +3,17 @@ import fs from "fs";
 import { getCurrentDate } from "./formatDate.js";
 import { fileURLToPath } from "url";
 import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config({
+  path: `.env.${process.env.NODE_ENV}`
+});
 
 const eventEmitter = new EventEmitter();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const filePath = path.join(__dirname, "..", "filesUpload.log");
+const filePath = path.join(__dirname, "../logs/", process.env.LOG_FILE);
 
 function addLog(message) {
   fs.appendFile(filePath,`${getCurrentDate()} - ${message};\n`, (err) => {

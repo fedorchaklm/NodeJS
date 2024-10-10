@@ -72,17 +72,17 @@ export const carts = [];
 
 export const orders = [];
 
-export function getCart(userId) {
-  let cart = carts.find((cart) => cart.userId === userId);
+// export function getCart(userId) {
+//   let cart = carts.find((cart) => cart.userId === userId);
 
-  if (!cart) {
-    cart = {
-      id: crypto.randomUUID(),
-      userId,
-      products: [],
-    };
-    carts.push(cart);
-  }
+//   if (!cart) {
+//     cart = {
+//       id: crypto.randomUUID(),
+//       userId,
+//       products: [],
+//     };
+//     carts.push(cart);
+//   }
 
-  return cart;
-}
+//   return cart;
+// }

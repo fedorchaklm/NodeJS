@@ -1,18 +1,23 @@
 import express from "express";
 import bodyParser from "body-parser";
-import registerRouter from "./routers/register.js";
-import productsRouter from "./routers/products.js";
-import cartRouter from "./routers/cart.js";
-import { PORT } from "./constants.js";
+import userRoutes from "./routes/user.routes.js";
+import productRoutes from "./routes/product.routes.js";
+import cartRoutes from "./routes/cart.routes.js";
+import dotenv from 'dotenv';
 import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 
+dotenv.config({
+  path: `.env.${process.env.NODE_ENV}`
+})
+const PORT = process.env.PORT;
+
 app.use(bodyParser.json());
 
-app.use("/api/register", registerRouter);
-app.use("/api/products", productsRouter);
-app.use("/api/cart", cartRouter);
+app.use("/api/register", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.use(errorHandler);
 
