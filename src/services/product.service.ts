@@ -1,10 +1,12 @@
-import * as productRepository from "../repositories/product.repository.js";
+import * as productRepository from "../repositories/product.repository";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import { randomUUID } from "crypto";
-import eventEmitter from "../common/eventEmitter.js";
+import eventEmitter from "../common/eventEmitter";
 import csv from "csv-parser";
+import { Request, Response } from "express";
+import { Product, ProductCsv } from "src/types/types";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,16 +17,16 @@ export const getAllProducts = () => {
   return products;
 };
 
-export const getProductById = (productId) => {
+export const getProductById = (productId: number): Product => {
   const product = productRepository.getProductById(productId);
   return product;
 };
 
-export const addProduct = ({ name, description, category, price }) => {
+export const addProduct = ({ name, description, category, price }): ProductCsv => {
   const product = { id: randomUUID(), name, description, category, price };
   try {
     const data = fs.readFileSync(productsStoreFilePath, "utf-8");
-    const parsedData = JSON.parse(data === "" ? [] : data);
+    const parsedData = JSON.parse(data === "" ? '[]' : data);
     parsedData.push(product);
     fs.writeFileSync(productsStoreFilePath, `${JSON.stringify(parsedData)}`);
   } catch (err) {
@@ -33,15 +35,16 @@ export const addProduct = ({ name, description, category, price }) => {
   return product;
 };
 
-export const transformCsvToJson = (req, res) => {
-  let result = {};
+export const transformCsvToJson = (req: Request, res: Response) => {
+  let result: { error?: Error; code: number; message?: string };
 
   const writableStream = fs.createWriteStream(productsStoreFilePath);
 
   writableStream.on("close", () => {
     if (result.error) {
       eventEmitter.emit("fileUploadFailed", result.error);
-      return res.status(result.code).send(result.error.message);
+      res.status(result.code).send(result.error.message);
+      return;
     }
     eventEmitter.emit("fileUploadEnd");
     res.status(result.code).send(result.message);
