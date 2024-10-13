@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const productsStoreFilePath = path.join(__dirname, "..", "products.store.json");
 
-export const getAllProducts = () => {
+export const getAllProducts = (): Array<Product> => {
   const products = productRepository.getProducts();
   return products;
 };

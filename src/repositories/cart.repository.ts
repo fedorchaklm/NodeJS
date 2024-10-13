@@ -1,6 +1,6 @@
 import { carts } from "../storage";
 import crypto from "crypto";
-import { Cart, Product } from "src/types/types";
+import { Cart, Product } from "../types/types";
 
 export const getCart = (userId: string): Cart => {
   let cart = carts.find((cart) => cart.userId === userId);

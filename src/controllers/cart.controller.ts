@@ -1,6 +1,6 @@
-import { RequestWithUserId } from "src/types/types";
-import * as cartService from "../services/cart.service";
 import { Request, Response } from "express";
+import { RequestWithUserId } from "../types/types";
+import * as cartService from "../services/cart.service";
 
 export const addProductToCart = (req: Request, res: Response) => {
   const { userId } = req as RequestWithUserId;
