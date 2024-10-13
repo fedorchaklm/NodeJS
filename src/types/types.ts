@@ -1,9 +1,3 @@
-import { Request } from "express";
-
-export type RequestWithUserId = Request & {
-  userId: string;
-};
-
 export type User = {
   id: string;
   email: string;
@@ -20,13 +14,13 @@ export type Product = {
 
 export type Cart = {
   id: string;
-  userId: number;
+  userId: string;
   products: Product[];
 };
 
 export type TotalCart = {
   id: string;
-  userId: number;
+  userId: string;
   products: Product[];
   totalPrice: number;
 };

@@ -7,6 +7,5 @@ export const currentUser = (req: Request, res: Response, next: NextFunction) => 
   if (!userId) {
     throw new UnauthorizedError();
   }
-  req['userId'] = userId.toString();
   return next();
 };

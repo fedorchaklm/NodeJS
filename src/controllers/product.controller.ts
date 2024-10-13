@@ -1,7 +1,7 @@
 import * as productService from "../services/product.service";
 import { Request, Response } from "express";
 
-export const getAllProducts = (_, res: Response) => {
+export const getAllProducts = (_: Request, res: Response) => {
   const products = productService.getAllProducts();
   res.status(200).json(products);
 };
@@ -18,9 +18,5 @@ export const addProduct = (req: Request, res: Response) => {
 };
 
 export const transformCsvToJson = (req: Request, res: Response) => {
-  try {
-    productService.transformCsvToJson(req, res);
-  } catch (err) {
-    throw new Error(err.message);
-  }
+  productService.transformCsvToJson(req, res);
 };

@@ -1,4 +1,6 @@
-export const products = [
+import { Cart, Product, User } from "./types/types";
+
+export const products: Array<Product> = [
   {
     id: 1,
     title: "Digital Painting",
@@ -64,8 +66,6 @@ export const products = [
   },
 ];
 
-export const users = [];
+export const users: Array<User> = [];
 
-export const carts = [];
-
-export const orders = [];
+export const carts: Array<Cart> = [];

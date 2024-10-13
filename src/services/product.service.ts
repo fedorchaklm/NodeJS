@@ -6,7 +6,7 @@ import { randomUUID } from "crypto";
 import eventEmitter from "../common/eventEmitter";
 import csv from "csv-parser";
 import { Request, Response } from "express";
-import { Product, ProductCsv } from "src/types/types";
+import { Product, ProductCsv } from "../types/types";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,16 +22,17 @@ export const getProductById = (productId: number): Product => {
   return product;
 };
 
-export const addProduct = ({ name, description, category, price }): ProductCsv => {
+export const addProduct = ({
+  name,
+  description,
+  category,
+  price,
+}: ProductCsv): ProductCsv => {
   const product = { id: randomUUID(), name, description, category, price };
-  try {
-    const data = fs.readFileSync(productsStoreFilePath, "utf-8");
-    const parsedData = JSON.parse(data === "" ? '[]' : data);
-    parsedData.push(product);
-    fs.writeFileSync(productsStoreFilePath, `${JSON.stringify(parsedData)}`);
-  } catch (err) {
-    throw new Error(err.message);
-  }
+  const data = fs.readFileSync(productsStoreFilePath, "utf-8");
+  const parsedData = JSON.parse(data === "" ? "[]" : data);
+  parsedData.push(product);
+  fs.writeFileSync(productsStoreFilePath, `${JSON.stringify(parsedData)}`);
   return product;
 };
 
@@ -50,7 +51,7 @@ export const transformCsvToJson = (req: Request, res: Response) => {
     res.status(result.code).send(result.message);
   });
 
-  let lastItem = null;
+  let lastItem: string | null = null;
 
   eventEmitter.emit("fileUploadStart");
 

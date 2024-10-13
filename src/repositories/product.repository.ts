@@ -1,6 +1,6 @@
 import { products } from "../storage";
 import { NotFoundError } from "../common/errors";
-import { Product } from "src/types/types";
+import { Product } from "../types/types";
 
 export const getProducts = (): Array<Product> => {
   return products;
