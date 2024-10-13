@@ -1,6 +1,6 @@
-import crypto from "crypto";
+import { Cart, Product, User } from "./types/types";
 
-export const products = [
+export const products: Array<Product> = [
   {
     id: 1,
     title: "Digital Painting",
@@ -66,23 +66,6 @@ export const products = [
   },
 ];
 
-export const users = [];
+export const users: Array<User> = [];
 
-export const carts = [];
-
-export const orders = [];
-
-export function getCart(userId) {
-  let cart = carts.find((cart) => cart.userId === userId);
-
-  if (!cart) {
-    cart = {
-      id: crypto.randomUUID(),
-      userId,
-      products: [],
-    };
-    carts.push(cart);
-  }
-
-  return cart;
-}
+export const carts: Array<Cart> = [];
