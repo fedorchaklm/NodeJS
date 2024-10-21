@@ -1,8 +1,11 @@
+import { Request } from "express";
+
 export type User = {
   id: string;
   email: string;
   name: string;
-  password?: string;
+  password: string;
+  role: APP_ROLES;
 };
 
 export type Product = {
@@ -32,3 +35,12 @@ export type ProductCsv = {
   category: string;
   price: number;
 };
+
+export type UserRequest = Request & { userRole?: string };
+
+export enum APP_ROLES {
+  Admin = "ADMIN",
+  Customer = "CUSTOMER",
+}
+
+export type Maybe<T> = T | undefined;

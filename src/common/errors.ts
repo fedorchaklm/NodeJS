@@ -12,6 +12,12 @@ export class UnauthorizedError extends HttpError {
   }
 }
 
+export class ForbiddenError extends HttpError {
+  constructor() {
+    super(403, "Forbidden");
+  }
+}
+
 export class NotFoundError extends HttpError {
   constructor() {
     super(404, `Product is not found`);
