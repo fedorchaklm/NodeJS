@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { currentUser } from "../middleware/currentUser";
 import * as cartController from "../controllers/cart.controller";
+import { auth } from "../middleware/auth";
 
 const router = Router();
 
-router.put("/:productId", currentUser, cartController.addProductToCart);
+router.put("/:productId", auth, cartController.addProductToCart);
 
-router.delete("/:productId", currentUser, cartController.removeProductFromCart);
+router.delete("/:productId", auth, cartController.removeProductFromCart);
 
-router.post("/checkout", currentUser, cartController.getCartWithTotalPrice);
+router.post("/checkout", auth, cartController.getCartWithTotalPrice);
 
 export default router;
