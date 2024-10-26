@@ -1,13 +1,11 @@
 // import { carts } from '../storage';
 import crypto from 'crypto';
 import { Cart, Product } from '../types/types';
-import CartModel from '../models/cart.model';
-import { NotFoundError } from '../common/errors';
+import CartModel, { convert, ICart } from '../models/cart.model';
+import { HttpError, NotFoundError } from '../common/errors';
 
 export const getCart = async (userId: string): Promise<Cart> => {
-  // let cart = carts.find((cart) => cart.userId === userId);
   let cart = await CartModel.findOne({ userId }).populate('products');
-  console.log('> 1', cart);
 
   if (cart === null) {
     cart = new CartModel({
@@ -18,22 +16,24 @@ export const getCart = async (userId: string): Promise<Cart> => {
     await cart.save();
   }
 
-  console.log('> cart', cart);
-
-  return cart.toClient();
-  // const { _id, products, ...rest} = cart.toObject();
-  // const products = rest.products(())
-  // return {id: _id, products,...rest};
+  return convert(cart);
 };
 
-export const updateCart = async (userId: string, productId: string): Promise<Cart> => {
-  const a = await CartModel.findOneAndUpdate({ userId }, { $push: { products: productId } }, { new: true }).populate('products');
-  await a?.save();
-  console.log(a);
-  const currentCart = await getCart(userId);
-  console.log(currentCart);
-  return currentCart;
-};
+export const updateCart = async (cart: Cart): Promise<Cart> => {
+  const products = cart.products.map(({ id }) => id);
+  const updatedCart = await CartModel.findOneAndUpdate({ _id: cart.id }, {
+    userId: cart.userId,
+    products,
+  }).populate('products');
+
+  if (updatedCart == null) {
+    throw new HttpError(404, 'Cart not found');
+  }
+
+  return convert(updatedCart);
+}
+
+
 
 export const deleteProductFromCart = async (userId: string, productId: string): Promise<Cart> => {
   const updatedCart = await CartModel.findOne({ userId }).populate('products');

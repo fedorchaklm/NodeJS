@@ -1,42 +1,36 @@
 import mongoose, { Model, Types } from 'mongoose';
-import ProductModel, { IProductModel, productSchema } from './product.model';
+import { IProduct, productSchema } from './product.model';
 import { randomUUID } from 'crypto';
 import { Cart } from '../types/types';
-import { ref } from 'joi';
+import { convert as convertProduct } from './product.model';
 const { Schema } = mongoose;
-
-interface ICart {
+export interface ICart {
   _id: string;
   userId: string;
-  products: Array<IProductModel>;
+  products: Array<IProduct>;
 }
 
-interface ICartMethods {
-  toClient(): Cart;
-}
-
-type CartModel = Model<ICart, {}, ICartMethods>;
-
-const cartSchema = new Schema({
-  _id: {
-    type: String,
-    default: function genUUID() {
-      return randomUUID();
+const cartSchema = new Schema<ICart>(
+  {
+    _id: {
+      type: String,
+      default: function genUUID() {
+        return randomUUID();
+      },
     },
+    userId: {
+      type: String,
+      required: true,
+    },
+    products: [{ type: String, ref: 'Product' }],
   },
-  userId: {
-    type: String,
-    required: true,
-  },
-  products: [{ type: String, ref: 'Product' }]
-}, { versionKey: false });
+  { versionKey: false }
+);
 
-cartSchema.method('toClient', function (): Cart {
-  return {
-    id: this._id,
-    userId: this.userId,
-    products: [],
-  };
+export const convert = (cart: ICart): Cart => ({
+  id: cart._id,
+  userId: cart.userId,
+  products: cart.products.map(convertProduct),
 });
 
-export default mongoose.model<ICart, CartModel>('Cart', cartSchema);
+export default mongoose.model('Cart', cartSchema);

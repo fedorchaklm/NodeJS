@@ -3,7 +3,7 @@ import mongoose, { Model } from 'mongoose';
 import { Product } from '../types/types';
 const { Schema } = mongoose;
 
-interface IProduct {
+export interface IProduct {
   _id: string;
   name: string;
   description: string;
@@ -11,19 +11,11 @@ interface IProduct {
   price: number;
 }
 
-interface IProductMethods {
-  toClient(): Product;
-}
-
-export type IProductModel = Model<IProduct, {}, IProductMethods>;
-
-export const productSchema = new Schema<IProduct, IProductModel, IProductMethods>(
+export const productSchema = new Schema<IProduct>(
   {
     _id: {
       type: String,
-      default: function genUUID() {
-        return randomUUID();
-      },
+      required: true,
     },
     name: {
       type: String,
@@ -47,14 +39,12 @@ export const productSchema = new Schema<IProduct, IProductModel, IProductMethods
   { versionKey: false }
 );
 
-productSchema.method('toClient', function (): Product {
-  return {
-    id: this._id,
-    name: this.name,
-    description: this.description,
-    category: this.category,
-    price: this.price,
-  };
+export const convert = (product: IProduct): Product => ({
+  id: product._id,
+  name: product.name,
+  description: product.description,
+  category: product.category,
+  price: product.price,
 });
 
-export default mongoose.model<IProduct, IProductModel>('Product', productSchema);
+export default mongoose.model('Product', productSchema);

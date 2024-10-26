@@ -3,8 +3,11 @@ import * as productRepository from '../repositories/product.repository';
 import { Cart, TotalCart } from '../types/types';
 
 export const addProductToCart = async (userId: string, productId: string): Promise<Cart> => {
-  // const product = await productRepository.getProductById(productId);
-  const cart = await cartRepository.updateCart(userId, productId);
+  const cart = await cartRepository.getCart(userId);
+  const product = await productRepository.getProductById(productId);
+  cart.products.push(product);
+  const res = await cartRepository.updateCart(cart);
+  console.log('> addProductToCart', { cart });
   return cart;
 };
 
