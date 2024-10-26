@@ -9,31 +9,24 @@ export type User = {
 };
 
 export type Product = {
-  id: number;
-  title: string;
+  id: string;
+  name: string;
   description: string;
+  category: string;
   price: number;
 };
 
 export type Cart = {
   id: string;
   userId: string;
-  products: Product[];
+  products: Array<Product>;
 };
 
 export type TotalCart = {
   id: string;
   userId: string;
-  products: Product[];
+  products: Array<Product>;
   totalPrice: number;
-};
-
-export type ProductCsv = {
-  id?: string;
-  name: string;
-  description: string;
-  category: string;
-  price: number;
 };
 
 export type UserRequest = Request & { userRole?: string };
