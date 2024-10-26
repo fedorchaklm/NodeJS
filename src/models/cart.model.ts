@@ -2,6 +2,7 @@ import mongoose, { Model, Types } from 'mongoose';
 import ProductModel, { IProductModel, productSchema } from './product.model';
 import { randomUUID } from 'crypto';
 import { Cart } from '../types/types';
+import { ref } from 'joi';
 const { Schema } = mongoose;
 
 interface ICart {
@@ -27,7 +28,7 @@ const cartSchema = new Schema({
     type: String,
     required: true,
   },
-  products: [{ type: Types.ObjectId, ref: 'Product' }]
+  products: [{ type: String, ref: 'Product' }]
 }, { versionKey: false });
 
 cartSchema.method('toClient', function (): Cart {

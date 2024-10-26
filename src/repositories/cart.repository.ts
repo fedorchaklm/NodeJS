@@ -7,7 +7,6 @@ import { NotFoundError } from '../common/errors';
 export const getCart = async (userId: string): Promise<Cart> => {
   // let cart = carts.find((cart) => cart.userId === userId);
   let cart = await CartModel.findOne({ userId }).populate('products');
-
   console.log('> 1', cart);
 
   if (cart === null) {
@@ -27,17 +26,23 @@ export const getCart = async (userId: string): Promise<Cart> => {
   // return {id: _id, products,...rest};
 };
 
-export const updateCart = async (userId: string, product: Product): Promise<Cart> => {
-  const cart = await getCart(userId);
-  // cart.products.push(product);
-  return cart;
+export const updateCart = async (userId: string, productId: string): Promise<Cart> => {
+  const a = await CartModel.findOneAndUpdate({ userId }, { $push: { products: productId } }, { new: true }).populate('products');
+  await a?.save();
+  console.log(a);
+  const currentCart = await getCart(userId);
+  console.log(currentCart);
+  return currentCart;
 };
 
-export const deleteProductFromCart = (userId: string, productId: string): Promise<Cart> => {
-  const cart = getCart(userId);
+export const deleteProductFromCart = async (userId: string, productId: string): Promise<Cart> => {
+  const updatedCart = await CartModel.findOne({ userId }).populate('products');
+  // const productIndex = cart?.products.findIndex((product) => product === productId);
+  // cart?.products.splice(productIndex, 1);
+  const cart2 = getCart(userId);
   // const index = cart.products.findIndex(({ id }) => id === productId);
   // cart.products.splice(index, 1);
-  return cart;
+  return cart2;
 };
 
 // export const getTotalPriceOfCart = (userId: string): number => {
