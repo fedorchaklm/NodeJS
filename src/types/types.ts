@@ -18,16 +18,11 @@ export type Product = {
 
 export type Cart = {
   id: string;
-  userId: string;
+  user: User;
   products: Array<Product>;
 };
 
-export type TotalOrder = {
-  name: string,
-  email: string,
-  id: string;
-  userId: string;
-  products: Array<Product>;
+export type TotalOrder = Cart & {
   totalPrice: number;
 };
 

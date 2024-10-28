@@ -3,16 +3,18 @@ import { Cart } from '../types/types';
 import CartModel, { convert } from '../models/cart.model';
 import { HttpError } from '../common/errors';
 import { UserModel } from '../models/user.model';
+import * as userRepository from './user.repository';
 
 export const getCart = async (userId: string): Promise<Cart> => {
-  let cart = await CartModel.findOne({ userId }).populate('products');
-  if (cart === null) {
-    cart = new CartModel({
+  let cart = await CartModel.findOne({ user: userId }).populate(['user', 'products']);
+
+  if (cart == null) {
+    const newCart = await new CartModel({
       _id: crypto.randomUUID(),
-      userId,
+      user: userId,
       products: [],
-    });
-    await cart.save();
+    }).save();
+    cart = await newCart.populate(['user', 'products']);
   }
 
   return convert(cart);
@@ -23,7 +25,7 @@ export const updateCart = async (cart: Cart): Promise<Cart> => {
   const updatedCart = await CartModel.findOneAndUpdate(
     { _id: cart.id },
     {
-      userId: cart.userId,
+      user: cart.user.id,
       products,
     }
   ).populate('products');
@@ -35,12 +37,6 @@ export const updateCart = async (cart: Cart): Promise<Cart> => {
   console.log(updateCart);
   return convert(updatedCart);
 };
-
-// export const getTotalPriceOfCart = async (cart: Cart): Promise<number> => {
-//   // const cart = await getCart(userId);
-//   const totalPrice = cart.products.reduce((acc, { price }) => acc + price, 0);
-//   return totalPrice;
-// };
 
 // export const getTotalPriceOfCart = async (cart: Cart) => {
 //   try {

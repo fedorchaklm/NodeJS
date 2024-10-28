@@ -2,7 +2,6 @@ import { NotFoundError } from '../common/errors';
 import * as cartRepository from '../repositories/cart.repository';
 import * as productRepository from '../repositories/product.repository';
 import { Cart, TotalOrder } from '../types/types';
-import * as userRepository from '../repositories/user.repository';
 
 export const addProductToCart = async (userId: string, productId: string): Promise<Cart> => {
   const cart = await cartRepository.getCart(userId);
@@ -27,8 +26,6 @@ export const removeProductFromCart = async (userId: string, productId: string): 
 
 export const getTotalOrder = async (userId: string): Promise<TotalOrder> => {
   const cart = await cartRepository.getCart(userId);
-  const user = await userRepository.getInfoAboutUser(cart.userId);
-  const { name, email } = user;
   const totalPrice = cart.products.reduce((acc, { price }) => acc + price, 0);
-  return { name, email, ...cart, totalPrice };
+  return {...cart, totalPrice };
 };

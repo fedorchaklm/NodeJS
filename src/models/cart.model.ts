@@ -3,10 +3,11 @@ import { IProduct, productSchema } from './product.model';
 import { randomUUID } from 'crypto';
 import { Cart } from '../types/types';
 import { convert as convertProduct } from './product.model';
+import { IUser, convert as convertUser } from './user.model';
 const { Schema } = mongoose;
 export interface ICart {
   _id: string;
-  userId: string;
+  user: IUser;
   products: Array<IProduct>;
 }
 
@@ -18,19 +19,19 @@ const cartSchema = new Schema<ICart>(
         return randomUUID();
       },
     },
-      userId: {
+    user: {
       type: String,
-      required: true,
+      ref: 'User',
     },
     products: [{ type: String, ref: 'Product' }],
-     },
+  },
   { versionKey: false }
 );
 
 export const convert = (cart: ICart): Cart => ({
   id: cart._id,
-  userId: cart.userId,
-  products: cart.products.map(convertProduct)
+  user: convertUser(cart.user),
+  products: cart.products.map(convertProduct),
 });
 
 export default mongoose.model('Cart', cartSchema);
