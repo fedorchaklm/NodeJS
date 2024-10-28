@@ -8,7 +8,6 @@ export const addProductToCart = async (userId: string, productId: string): Promi
   const product = await productRepository.getProductById(productId);
   cart.products.push(product);
   await cartRepository.updateCart(cart);
-  console.log('> addProductToCart', { cart });
   return cart;
 };
 
@@ -20,7 +19,6 @@ export const removeProductFromCart = async (userId: string, productId: string): 
   }
   cart.products.splice(index, 1);
   await cartRepository.updateCart(cart);
-  console.log('> removeProductFromCart', { cart });
   return cart;
 };
 
