@@ -28,13 +28,12 @@ export const updateCart = async (cart: Cart): Promise<Cart> => {
       user: cart.user.id,
       products,
     }
-  ).populate('products');
+  ).populate(['user', 'products']);
 
   if (updatedCart == null) {
     throw new HttpError(404, 'Cart not found');
   }
 
-  console.log(updateCart);
   return convert(updatedCart);
 };
 

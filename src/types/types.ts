@@ -18,7 +18,11 @@ export type Product = {
 
 export type Cart = {
   id: string;
-  user: User;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
   products: Array<Product>;
 };
 

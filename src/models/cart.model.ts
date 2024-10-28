@@ -1,9 +1,10 @@
-import mongoose, { Model, Types } from 'mongoose';
-import { IProduct, productSchema } from './product.model';
+import mongoose from 'mongoose';
+import { IProduct } from './product.model';
 import { randomUUID } from 'crypto';
 import { Cart } from '../types/types';
 import { convert as convertProduct } from './product.model';
-import { IUser, convert as convertUser } from './user.model';
+import { IUser } from './user.model';
+
 const { Schema } = mongoose;
 export interface ICart {
   _id: string;
@@ -28,10 +29,16 @@ const cartSchema = new Schema<ICart>(
   { versionKey: false }
 );
 
-export const convert = (cart: ICart): Cart => ({
-  id: cart._id,
-  user: convertUser(cart.user),
-  products: cart.products.map(convertProduct),
-});
+export const convert = (cart: ICart): Cart => {
+  return {
+    id: cart._id,
+    user: {
+      id: cart.user._id,
+      email: cart.user.email,
+      name: cart.user.name,
+    },
+    products: cart.products.map(convertProduct),
+  };
+};
 
 export default mongoose.model('Cart', cartSchema);
