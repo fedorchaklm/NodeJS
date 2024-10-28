@@ -18,19 +18,19 @@ const cartSchema = new Schema<ICart>(
         return randomUUID();
       },
     },
-    userId: {
+      userId: {
       type: String,
       required: true,
     },
     products: [{ type: String, ref: 'Product' }],
-  },
+     },
   { versionKey: false }
 );
 
 export const convert = (cart: ICart): Cart => ({
   id: cart._id,
   userId: cart.userId,
-  products: cart.products.map(convertProduct),
+  products: cart.products.map(convertProduct)
 });
 
 export default mongoose.model('Cart', cartSchema);

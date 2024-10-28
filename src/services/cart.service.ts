@@ -1,3 +1,4 @@
+import { NotFoundError } from '../common/errors';
 import * as cartRepository from '../repositories/cart.repository';
 import * as productRepository from '../repositories/product.repository';
 import { Cart, TotalCart } from '../types/types';
@@ -6,19 +7,26 @@ export const addProductToCart = async (userId: string, productId: string): Promi
   const cart = await cartRepository.getCart(userId);
   const product = await productRepository.getProductById(productId);
   cart.products.push(product);
-  const res = await cartRepository.updateCart(cart);
+  await cartRepository.updateCart(cart);
   console.log('> addProductToCart', { cart });
   return cart;
 };
 
-export const removeProductFromCart = (userId: string, productId: string): Promise<Cart> => {
-  const cart = cartRepository.deleteProductFromCart(userId, productId);
+export const removeProductFromCart = async (userId: string, productId: string): Promise<Cart> => {
+  const cart = await cartRepository.getCart(userId);
+  const index = cart.products.findIndex(({ id }) => id === productId);
+  if(index < 0) {
+   throw new NotFoundError();
+  }
+  cart.products.splice(index, 1);
+  await cartRepository.updateCart(cart);
+  console.log('> removeProductFromCart', { cart });
   return cart;
 };
 
 export const getCartWithTotalPrice = async (userId: string): Promise<TotalCart> => {
   const cart = await cartRepository.getCart(userId);
-  // const totalPrice = cartRepository.getTotalPriceOfCart(userId);
-  // return { ...cart, totalPrice };
-  return { ...cart, totalPrice: 10 };
+  // const totalPrice = await cartRepository.getTotalPriceOfCart(cart);
+  const totalPrice = cart.products.reduce((acc, { price }) => acc + price, 0);
+  return { ...cart, totalPrice };
 };

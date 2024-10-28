@@ -13,11 +13,15 @@ export const addProductToCart = async (req: Request, res: Response, next: NextFu
   }
 };
 
-export const removeProductFromCart = (req: Request, res: Response) => {
-  const userId = getUserId(req);
-  const productId = req.params.productId;
-  const cart = cartService.removeProductFromCart(userId, productId);
-  res.status(200).json(cart);
+export const removeProductFromCart = async (req: Request, res: Response, next: NextFunction) => {
+  try{
+    const userId = getUserId(req);
+    const productId = req.params.productId;
+    const cart = await cartService.removeProductFromCart(userId, productId);
+    res.status(200).json(cart);
+  } catch (e) {
+    next(e);
+  }
 };
 
 export const getCartWithTotalPrice = async (req: Request, res: Response, next: NextFunction) => {

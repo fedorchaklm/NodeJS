@@ -11,7 +11,7 @@ export const addUser = async (user: User): Promise<User> => {
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   const user = await UserModel.findOne({ email });
   if (user === null) {
-    return null;
+    throw new Error("No such user with such email");  // check
   }
   return convert(user);
 };

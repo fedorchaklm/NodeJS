@@ -1,4 +1,3 @@
-// import { products } from '../storage';
 import { NotFoundError } from '../common/errors';
 import { Product } from '../types/types';
 import ProductModel, { convert } from '../models/product.model';

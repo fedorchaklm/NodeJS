@@ -33,11 +33,11 @@ const userSchema = new Schema(
       required: true,
     },
     role: {
-      required: true,
       type: String,
       enum: Object.values(APP_ROLES),
+      required: true,
     },
-  },
+   },
   { versionKey: false }
 );
 
