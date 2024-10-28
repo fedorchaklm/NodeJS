@@ -24,10 +24,10 @@ export const removeProductFromCart = async (req: Request, res: Response, next: N
   }
 };
 
-export const getCartWithTotalPrice = async (req: Request, res: Response, next: NextFunction) => {
+export const getTotalOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = getUserId(req);
-    const cartWithTotalPrice = await cartService.getCartWithTotalPrice(userId);
+    const cartWithTotalPrice = await cartService.getTotalOrder(userId);
     res.status(200).json(cartWithTotalPrice);
   } catch (e) {
     next(e);

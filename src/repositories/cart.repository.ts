@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { Cart } from '../types/types';
 import CartModel, { convert } from '../models/cart.model';
 import { HttpError } from '../common/errors';
+import { UserModel } from '../models/user.model';
 
 export const getCart = async (userId: string): Promise<Cart> => {
   let cart = await CartModel.findOne({ userId }).populate('products');

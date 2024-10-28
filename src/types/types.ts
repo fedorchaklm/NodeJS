@@ -22,7 +22,9 @@ export type Cart = {
   products: Array<Product>;
 };
 
-export type TotalCart = {
+export type TotalOrder = {
+  name: string,
+  email: string,
   id: string;
   userId: string;
   products: Array<Product>;
