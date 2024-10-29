@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import mongoose, { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import { Product } from '../types/types';
 const { Schema } = mongoose;
 
@@ -15,7 +15,7 @@ export const productSchema = new Schema<IProduct>(
   {
     _id: {
       type: String,
-      required: true,
+      default: randomUUID,
     },
     name: {
       type: String,
@@ -47,4 +47,4 @@ export const convert = (product: IProduct): Product => ({
   price: product.price,
 });
 
-export default mongoose.model('Product', productSchema);
+export const ProductModel = mongoose.model('Product', productSchema);

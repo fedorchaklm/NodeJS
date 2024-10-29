@@ -1,20 +1,16 @@
-import crypto from 'crypto';
 import { Cart } from '../types/types';
-import CartModel, { convert } from '../models/cart.model';
+import { CartModel, convert } from '../models/cart.model';
 import { HttpError } from '../common/errors';
 
 export const getCart = async (userId: string): Promise<Cart> => {
   let cart = await CartModel.findOne({ user: userId }).populate(['user', 'products']);
-
   if (cart == null) {
     const newCart = await new CartModel({
-      _id: crypto.randomUUID(),
       user: userId,
       products: [],
     }).save();
     cart = await newCart.populate(['user', 'products']);
   }
-
   return convert(cart);
 };
 

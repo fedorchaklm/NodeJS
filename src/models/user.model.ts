@@ -15,9 +15,7 @@ const userSchema = new Schema(
   {
     _id: {
       type: String,
-      default: function genUUID() {
-        return randomUUID();
-      },
+      default: randomUUID,
     },
     name: {
       type: String,
@@ -37,7 +35,7 @@ const userSchema = new Schema(
       enum: Object.values(APP_ROLES),
       required: true,
     },
-   },
+  },
   { versionKey: false }
 );
 

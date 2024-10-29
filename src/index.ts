@@ -9,7 +9,7 @@ import { createAdmin } from './createAdmin';
 import loginRoutes from './routes/login.routes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { connectDB } from './db/mongodb';
+import { connectDB } from './db/db';
 
 const app = express();
 

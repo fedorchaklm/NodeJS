@@ -1,6 +1,6 @@
 import { NotFoundError } from '../common/errors';
 import { Product } from '../types/types';
-import ProductModel, { convert } from '../models/product.model';
+import {ProductModel, convert } from '../models/product.model';
 
 export const getProducts = async (): Promise<Array<Product>> => {
   const products = await ProductModel.find();

@@ -16,9 +16,7 @@ const cartSchema = new Schema<ICart>(
   {
     _id: {
       type: String,
-      default: function genUUID() {
-        return randomUUID();
-      },
+      default: randomUUID,
     },
     user: {
       type: String,
@@ -41,4 +39,4 @@ export const convert = (cart: ICart): Cart => {
   };
 };
 
-export default mongoose.model('Cart', cartSchema);
+export const CartModel = mongoose.model('Cart', cartSchema);

@@ -1,7 +1,7 @@
 import { Request } from "express";
 
 export type User = {
-  id: string;
+  id?: string;
   email: string;
   name: string;
   password: string;
@@ -9,7 +9,7 @@ export type User = {
 };
 
 export type Product = {
-  id: string;
+  id?: string;
   name: string;
   description: string;
   category: string;

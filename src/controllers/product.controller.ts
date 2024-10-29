@@ -12,7 +12,6 @@ export const getAllProducts = async (_: Request, res: Response<Array<Product>>, 
 };
 
 export const getProductById = async (req: Request, res: Response<Product>, next: NextFunction) => {
-  // const productId = Number(req.params.productId);
   try {
     const productId = req.params.productId;
     const product = await productService.getProductById(productId);
