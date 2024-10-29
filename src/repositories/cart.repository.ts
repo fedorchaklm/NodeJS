@@ -1,37 +1,32 @@
-import { carts } from "../storage";
-import crypto from "crypto";
-import { Cart, Product } from "../types/types";
+import { Cart } from '../types/types';
+import { CartModel, convert } from '../models/cart.model';
+import { HttpError } from '../common/errors';
 
-export const getCart = (userId: string): Cart => {
-  let cart = carts.find((cart) => cart.userId === userId);
-
-  if (!cart) {
-    cart = {
-      id: crypto.randomUUID(),
-      userId,
+export const getCart = async (userId: string): Promise<Cart> => {
+  let cart = await CartModel.findOne({ user: userId }).populate(['user', 'products']);
+  if (cart == null) {
+    const newCart = await new CartModel({
+      user: userId,
       products: [],
-    };
-    carts.push(cart);
+    }).save();
+    cart = await newCart.populate(['user', 'products']);
+  }
+  return convert(cart);
+};
+
+export const updateCart = async (cart: Cart): Promise<Cart> => {
+  const products = cart.products.map(({ id }) => id);
+  const updatedCart = await CartModel.findOneAndUpdate(
+    { _id: cart.id },
+    {
+      user: cart.user.id,
+      products,
+    }
+  ).populate(['user', 'products']);
+
+  if (updatedCart == null) {
+    throw new HttpError(404, 'Cart not found');
   }
 
-  return cart;
-};
-
-export const updateCart = (userId: string, product: Product): Cart => {
-  const cart = getCart(userId);
-  cart.products.push(product);
-  return cart;
-};
-
-export const deleteProductFromCart = (userId: string,  productId: number): Cart => {
-  const cart = getCart(userId);
-  const index = cart.products.findIndex(({ id }) => id === productId);
-  cart.products.splice(index, 1);
-  return cart;
-};
-
-export const getTotalPriceOfCart = (userId: string): number => {
-  const cart = getCart(userId);
-  const totalPrice = cart.products.reduce((acc, { price }) => acc + price, 0);
-  return totalPrice;
+  return convert(updatedCart);
 };

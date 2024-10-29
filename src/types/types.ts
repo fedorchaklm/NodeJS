@@ -1,7 +1,7 @@
 import { Request } from "express";
 
 export type User = {
-  id: string;
+  id?: string;
   email: string;
   name: string;
   password: string;
@@ -9,31 +9,25 @@ export type User = {
 };
 
 export type Product = {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-};
-
-export type Cart = {
-  id: string;
-  userId: string;
-  products: Product[];
-};
-
-export type TotalCart = {
-  id: string;
-  userId: string;
-  products: Product[];
-  totalPrice: number;
-};
-
-export type ProductCsv = {
   id?: string;
   name: string;
   description: string;
   category: string;
   price: number;
+};
+
+export type Cart = {
+  id: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  products: Array<Product>;
+};
+
+export type TotalOrder = Cart & {
+  totalPrice: number;
 };
 
 export type UserRequest = Request & { userRole?: string };

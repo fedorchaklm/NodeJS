@@ -1,20 +1,29 @@
-import * as cartRepository from "../repositories/cart.repository";
-import * as productRepository from "../repositories/product.repository";
-import { Cart, TotalCart } from "../types/types";
+import { NotFoundError } from '../common/errors';
+import * as cartRepository from '../repositories/cart.repository';
+import * as productRepository from '../repositories/product.repository';
+import { Cart, TotalOrder } from '../types/types';
 
-export const addProductToCart = (userId: string, productId: number): Cart => {
-  const product = productRepository.getProductById(productId);
-  const cart = cartRepository.updateCart(userId, product);
+export const addProductToCart = async (userId: string, productId: string): Promise<Cart> => {
+  const cart = await cartRepository.getCart(userId);
+  const product = await productRepository.getProductById(productId);
+  cart.products.push(product);
+  await cartRepository.updateCart(cart);
   return cart;
 };
 
-export const removeProductFromCart = (userId: string, productId: number): Cart => {
-  const cart = cartRepository.deleteProductFromCart(userId, productId);
+export const removeProductFromCart = async (userId: string, productId: string): Promise<Cart> => {
+  const cart = await cartRepository.getCart(userId);
+  const index = cart.products.findIndex(({ id }) => id === productId);
+  if (index < 0) {
+    throw new NotFoundError();
+  }
+  cart.products.splice(index, 1);
+  await cartRepository.updateCart(cart);
   return cart;
 };
 
-export const getCartWithTotalPrice = (userId: string): TotalCart => {
-  const cart = cartRepository.getCart(userId);
-  const totalPrice = cartRepository.getTotalPriceOfCart(userId);
-  return { ...cart, totalPrice };
+export const getTotalOrder = async (userId: string): Promise<TotalOrder> => {
+  const cart = await cartRepository.getCart(userId);
+  const totalPrice = cart.products.reduce((acc, { price }) => acc + price, 0);
+  return {...cart, totalPrice };
 };

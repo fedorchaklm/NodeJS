@@ -1,75 +1,49 @@
-import * as productRepository from "../repositories/product.repository";
-import fs from "fs";
-import { fileURLToPath } from "url";
-import path from "path";
-import { randomUUID } from "crypto";
-import eventEmitter from "../common/eventEmitter";
-import csv from "csv-parser";
-import { Request, Response } from "express";
-import { Product, ProductCsv } from "../types/types";
+import * as productRepository from '../repositories/product.repository';
+import eventEmitter from '../common/eventEmitter';
+import csv from 'csv-parser';
+import { Request, Response } from 'express';
+import { Product } from '../types/types';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const productsStoreFilePath = path.join(__dirname, "..", "products.store.json");
-
-export const getAllProducts = (): Array<Product> => {
-  const products = productRepository.getProducts();
-  return products;
+export const getAllProducts = (): Promise<Array<Product>> => {
+  return productRepository.getProducts();
 };
 
-export const getProductById = (productId: number): Product => {
+export const getProductById = (productId: string): Promise<Product> => {
   const product = productRepository.getProductById(productId);
   return product;
 };
 
-export const addProduct = ({
-  name,
-  description,
-  category,
-  price,
-}: ProductCsv): ProductCsv => {
-  const product = { id: randomUUID(), name, description, category, price };
-  const data = fs.readFileSync(productsStoreFilePath, "utf-8");
-  const parsedData = JSON.parse(data === "" ? "[]" : data);
-  parsedData.push(product);
-  fs.writeFileSync(productsStoreFilePath, `${JSON.stringify(parsedData)}`);
+export const addProduct = async ({ name, description, category, price }: Product): Promise<Product> => {
+  const newProduct = { name, description, category, price };
+  const product = await productRepository.addProduct(newProduct);
   return product;
 };
 
 export const transformCsvToJson = (req: Request, res: Response) => {
-  let result: { error?: Error; code: number; message?: string };
+  eventEmitter.emit('fileUploadStart');
 
-  const writableStream = fs.createWriteStream(productsStoreFilePath);
-
-  writableStream.on("close", () => {
-    if (result.error) {
-      eventEmitter.emit("fileUploadFailed", result.error);
-      res.status(result.code).send(result.error.message);
-      return;
-    }
-    eventEmitter.emit("fileUploadEnd");
-    res.status(result.code).send(result.message);
-  });
-
-  let lastItem: string | null = null;
-
-  eventEmitter.emit("fileUploadStart");
+  let batch: Array<Product> = [];
+  const batchSize = 100;
 
   req
     .pipe(csv())
-    .on("data", (data) => {
-      writableStream.write(
-        lastItem == null ? "[" : `${JSON.stringify(lastItem)},`
-      );
-      lastItem = data;
-    })
-    .on("end", () => {
-      if (lastItem == null) {
-        result = { code: 400, error: Error("File wasn't provided") };
-      } else {
-        writableStream.write(`${JSON.stringify(lastItem)}]`);
-        result = { code: 200, message: "File has been uploaded successfully!" };
+    .on('data', async (data) => {
+      batch.push({
+        name: data.name,
+        description: data.description,
+        category: data.category,
+        price: Number(data.price)
+      });
+      if (batch.length === batchSize) {
+        await productRepository.addManyProducts(batch.splice(0));
       }
-      writableStream.close();
+    })
+    .on('error', () => {
+      eventEmitter.emit('fileUploadFailed');
+    })
+    .on('end', async () => {
+      await productRepository.addManyProducts(batch.splice(0));
+      eventEmitter.emit('fileUploadEnd');
+      res.status(200).send('File has been uploaded successfully!');
     });
 };
