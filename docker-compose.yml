@@ -10,7 +10,7 @@ services:
     #   - .:/app # bind mount . : folder inside the container
     #   - /app/node_modules # volume
     ports:
-      - '3000:3000'
+      - '3000:80'
     env_file:
       - .env.${NODE_ENV:-production}  
     depends_on:
