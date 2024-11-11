@@ -15,6 +15,9 @@ export const getProductById = async (req: Request, res: Response<Product>, next:
   try {
     const productId = req.params.productId;
     const product = await productService.getProductById(productId);
+    if (product == null) {
+      throw Error();
+    }
     res.status(200).json(product);
   } catch (e) {
     next(e);

@@ -16,4 +16,5 @@ export default {
   adminEmail: process.env.EMAIL!,
   adminPassword: process.env.PASSWORD!,
   mongoDBConnection: process.env.MONGO_DB_CONNECTION!,
+  mongoURI: process.env.MONGO_URI!,
 };

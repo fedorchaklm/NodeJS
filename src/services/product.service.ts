@@ -3,13 +3,17 @@ import eventEmitter from '../common/eventEmitter';
 import csv from 'csv-parser';
 import { Request, Response } from 'express';
 import { Product } from '../types/types';
+import { NotFoundError } from '../common/errors';
 
 export const getAllProducts = (): Promise<Array<Product>> => {
   return productRepository.getProducts();
 };
 
-export const getProductById = (productId: string): Promise<Product> => {
+export const getProductById = (productId: string): Promise<Product | null> => {
   const product = productRepository.getProductById(productId);
+  if (!product) {
+    throw new NotFoundError();
+  }
   return product;
 };
 
@@ -32,7 +36,7 @@ export const transformCsvToJson = (req: Request, res: Response) => {
         name: data.name,
         description: data.description,
         category: data.category,
-        price: Number(data.price)
+        price: Number(data.price),
       });
       if (batch.length === batchSize) {
         await productRepository.addManyProducts(batch.splice(0));
