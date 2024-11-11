@@ -6,13 +6,13 @@ services:
       context: .
       args:
         - NODE_ENV=${NODE_ENV:-production}
-    # volumes:
-    #   - .:/app # bind mount . : folder inside the container
-    #   - /app/node_modules # volume
+    volumes:
+      - .:/app # bind mount . : folder inside the container
+      - /app/node_modules # volume
     ports:
       - '3000:80'
     env_file:
-      - .env.${NODE_ENV:-production}  
+      - .env.${NODE_ENV:-production}
     depends_on:
       - mongo
 
