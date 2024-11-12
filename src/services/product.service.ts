@@ -2,7 +2,7 @@ import * as productRepository from '../repositories/product.repository';
 import eventEmitter from '../common/eventEmitter';
 import csv from 'csv-parser';
 import { Request, Response } from 'express';
-import { Product } from '../types/types';
+import { CreateProduct, Product } from '../types/types';
 import { NotFoundError } from '../common/errors';
 
 export const getAllProducts = (): Promise<Array<Product>> => {
@@ -17,16 +17,15 @@ export const getProductById = (productId: string): Promise<Product | null> => {
   return product;
 };
 
-export const addProduct = async ({ name, description, category, price }: Product): Promise<Product> => {
+export const addProduct = async ({ name, description, category, price }: CreateProduct): Promise<Product> => {
   const newProduct = { name, description, category, price };
-  const product = await productRepository.addProduct(newProduct);
-  return product;
+  return productRepository.addProduct(newProduct);
 };
 
 export const transformCsvToJson = (req: Request, res: Response) => {
   eventEmitter.emit('fileUploadStart');
 
-  let batch: Array<Product> = [];
+  let batch: Array<Product | CreateProduct> = [];
   const batchSize = 100;
 
   req

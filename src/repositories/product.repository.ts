@@ -1,5 +1,5 @@
 import { NotFoundError } from '../common/errors';
-import { Product } from '../types/types';
+import { CreateProduct, Product } from '../types/types';
 import {ProductModel, convert } from '../models/product.model';
 
 export const getProducts = async (): Promise<Array<Product>> => {
@@ -18,14 +18,14 @@ export const getProductById = async (productId: string): Promise<Product> => {
   return convert(product);
 };
 
-export const addProduct = async (product: Product): Promise<Product> => {
+export const addProduct = async (product: CreateProduct): Promise<Product> => {
   const { id, ...rest } = product;
   const newProduct = new ProductModel({ _id: id, ...rest });
   await newProduct.save();
-  return product;
+  return convert(newProduct);
 };
 
-export const addManyProducts = async (products: Array<Product>): Promise<Array<Product>> => {
-  await ProductModel.insertMany(products.map(({ id, ...rest }) => ({ _id: id, ...rest })));
-  return products;
+export const addManyProducts = async (products: Array<CreateProduct>): Promise<Array<Product>> => {
+  const res = await ProductModel.insertMany(products.map(({ id, ...rest }) => ({ _id: id, ...rest })));
+  return res.map(convert);
 };

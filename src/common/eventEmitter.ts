@@ -1,14 +1,10 @@
 import EventEmitter from "events";
 import fs from "fs";
 import { getCurrentDate } from "./formatDate";
-import { fileURLToPath } from "url";
 import path from 'path';
 import config from '../config';
 
 const eventEmitter = new EventEmitter();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const filePath = path.join(__dirname, "../logs/", config.logFile);
 
 function addLog(message: string) {

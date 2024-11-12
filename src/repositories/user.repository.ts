@@ -1,5 +1,5 @@
 import { convert, UserModel } from '../models/user.model';
-import { User } from '../types/types';
+import { CreateUser, User } from '../types/types';
 
 export const getUserById = async (userId: string): Promise<User> => {
   const user = await UserModel.findOne({ _id: userId });
@@ -9,9 +9,8 @@ export const getUserById = async (userId: string): Promise<User> => {
   return convert(user);
 }
 
-export const addUser = async (user: User): Promise<User> => {
-  const { id, ...rest } = user;
-  const newUser = new UserModel({ _id: id, ...rest });
+export const addUser = async (user: CreateUser): Promise<User> => {
+  const newUser = new UserModel(user);
   await newUser.save();
   return convert(newUser);
 };
@@ -19,7 +18,8 @@ export const addUser = async (user: User): Promise<User> => {
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   const user = await UserModel.findOne({ email });
   if (user === null) {
-    throw new Error('No such user with such email'); // check
+    // throw new Error('No such user with such email'); 
+    return null;
   }
   return convert(user);
 };

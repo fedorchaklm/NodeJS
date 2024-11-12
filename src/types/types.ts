@@ -1,20 +1,24 @@
 import { Request } from "express";
 
 export type User = {
-  id?: string;
+  id: string;
   email: string;
   name: string;
   password: string;
   role: APP_ROLES;
 };
 
+export type CreateUser = Omit<User, 'id'>;
+
 export type Product = {
-  id?: string;
+  id: string;
   name: string;
   description: string;
   category: string;
   price: number;
 };
+
+export type CreateProduct = Omit<Product, 'id'> & { id?: string };
 
 export type Cart = {
   id: string;
