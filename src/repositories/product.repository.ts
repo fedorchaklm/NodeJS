@@ -13,7 +13,6 @@ export const getProducts = async (): Promise<Array<Product>> => {
 export const getProductById = async (productId: string): Promise<Product | null> => {
   const product = await ProductModel.findOne({_id: productId });
   if (!product) {
-    // throw new NotFoundError();
     return null;
   }
   return convert(product);
