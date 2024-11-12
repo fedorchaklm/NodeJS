@@ -10,10 +10,11 @@ export const getProducts = async (): Promise<Array<Product>> => {
   return products.map(convert);
 };
 
-export const getProductById = async (productId: string): Promise<Product> => {
+export const getProductById = async (productId: string): Promise<Product | null> => {
   const product = await ProductModel.findOne({_id: productId });
   if (!product) {
-    throw new NotFoundError();
+    // throw new NotFoundError();
+    return null;
   }
   return convert(product);
 };

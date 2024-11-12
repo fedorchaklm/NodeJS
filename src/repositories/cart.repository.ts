@@ -14,7 +14,7 @@ export const getCart = async (userId: string): Promise<Cart> => {
   return convert(cart);
 };
 
-export const updateCart = async (cart: Cart): Promise<Cart> => {
+export const updateCart = async (cart: Cart): Promise<Cart | null> => {
   const products = cart.products.map(({ id }) => id);
   const updatedCart = await CartModel.findOneAndUpdate(
     { _id: cart.id },
@@ -25,7 +25,7 @@ export const updateCart = async (cart: Cart): Promise<Cart> => {
   ).populate(['user', 'products']);
 
   if (updatedCart == null) {
-    throw new HttpError(404, 'Cart not found');
+    return null;
   }
 
   return convert(updatedCart);
