@@ -1,11 +1,8 @@
-// POST /api/register
 import request from 'supertest';
 import app, { startServer, stopServer } from '../../index';
-import { APP_ROLES } from '../../types/types';
-import { clearDB, connectDB } from '../../db/db';
-import { UserModel } from '../../models/user.model';
+import { clearDB } from '../../db/db';
 
-describe('Register API E2E TESTS', () => {
+describe('POST /api/register E2E TESTS', () => {
   beforeAll(async () => {
     await startServer();
     await clearDB();

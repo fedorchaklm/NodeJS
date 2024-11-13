@@ -1,17 +1,14 @@
 import request from 'supertest';
 import app, { startServer, stopServer } from '../../index';
-import { APP_ROLES, CreateProduct, Product } from '../../types/types';
-import { clearDB, connectDB } from '../../db/db';
 import { UserModel } from '../../models/user.model';
 import { CartModel } from '../../models/cart.model';
 import { ProductModel } from '../../models/product.model';
-import { USER_ID_HEADER } from '../../constants';
 import config from '../../config';
 import { createAdmin } from '../../createAdmin';
 
-let product;
+let product: any;
 
-describe('Cart/productId API E2E TESTS', () => {
+describe('PUT /api/cart/{productId} E2E TESTS', () => {
   beforeAll(async () => {
     await startServer();
   });
@@ -34,6 +31,7 @@ describe('Cart/productId API E2E TESTS', () => {
       category: 'fruits',
       price: 11,
     });
+    console.log(product.body.id);
   });
 
   afterAll(() => {
@@ -55,7 +53,20 @@ describe('Cart/productId API E2E TESTS', () => {
     const userId = user.body.id;
     console.log({ productId, userId });
     const res = await request(app).put(`/api/cart/${productId}`).set('Cookie', cookies).set({ 'x-user-id': userId });
-    console.log('body', res.body);
+    console.log('body', res.body, product.id);
     expect(res.statusCode).toEqual(200);
+    expect(res.body.products.find(({ id }) => id === productId)).toBeTruthy();
+  });
+
+  it('should throw error "Unauthorized"', async () => {
+    await request(app).post('/api/register').send({
+      email: 'sun4444.jones.2@epam.com',
+      name: 'Mary Smith',
+      password: 'a2A!abcd',
+    });
+    const productId = product.body.id;
+    const res = await request(app).put(`/api/cart/${productId}`);
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.message).toEqual('Unauthorized');
   });
 });
