@@ -1,7 +1,7 @@
-import * as productService from '../services/product.service';
-import { connectDB, disconnectDB } from '../db/db';
-import { ProductModel } from '../models/product.model';
-import * as productRepository from '../repositories/product.repository';
+import * as productService from '../product.service';
+import { connectDB, disconnectDB } from '../../db/db';
+import { ProductModel } from '../../models/product.model';
+import * as productRepository from '../../repositories/product.repository';
 
 describe('ProductService Integration Tests', () => {
   beforeAll(async () => {

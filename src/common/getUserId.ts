@@ -5,6 +5,7 @@ import { UnauthorizedError } from "./errors";
 export const getUserId = (req: Request): string => {
   const userId = req.headers[USER_ID_HEADER];
   if (typeof userId !== 'string') {
+    console.log('> getUserId');
     throw new UnauthorizedError();
   }
   return userId;

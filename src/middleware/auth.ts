@@ -11,6 +11,7 @@ export const auth = (req: UserRequest, res: Response, next: NextFunction): void 
     req.userRole = decodedData.role;
     next();
   } else {
+    console.log('>', 'auth');
     throw new UnauthorizedError();
   }
 }

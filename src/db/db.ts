@@ -3,7 +3,6 @@ import config from '../config';
 
 export const connectDB = async () => {
   try {
-    console.log('>', config);
     // await mongoose.connect(config.mongoDBConnection, { dbName: 'nodejs' });
     await mongoose.connect(config.mongoURI);
     console.log('MongoDB connected successfully');
@@ -16,3 +15,7 @@ export const connectDB = async () => {
 export const disconnectDB = async () => {
   await mongoose.connection.close();
 };
+
+export const clearDB = async () => {
+  await mongoose.connection.dropDatabase();
+}

@@ -1,7 +1,7 @@
-import * as userService from '../services/user.service';
-import { connectDB, disconnectDB } from '../db/db';
-import { UserModel } from '../models/user.model';
-import { APP_ROLES } from '../types/types';
+import * as userService from '../user.service';
+import { connectDB, disconnectDB } from '../../db/db';
+import { UserModel } from '../../models/user.model';
+import { APP_ROLES } from '../../types/types';
 
 beforeAll(async () => {
   await connectDB();

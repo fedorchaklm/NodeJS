@@ -5,7 +5,7 @@ import path from 'path';
 import config from '../config';
 
 const eventEmitter = new EventEmitter();
-const filePath = path.join(__dirname, "../logs/", config.logFile);
+const filePath = path.join('./src/logs/', config.logFile);
 
 function addLog(message: string) {
   fs.appendFile(filePath,`${getCurrentDate()} - ${message};\n`, (err) => {

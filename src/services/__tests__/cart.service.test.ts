@@ -1,11 +1,11 @@
-import * as cartService from '../services/cart.service';
-import * as productService from '../services/product.service';
-import * as userService from '../services/user.service';
-import { connectDB, disconnectDB } from '../db/db';
-import { CartModel } from '../models/cart.model';
-import { ProductModel } from '../models/product.model';
-import { UserModel } from '../models/user.model';
-import { Product, User } from '../types/types';
+import * as cartService from '../cart.service';
+import * as productService from '../product.service';
+import * as userService from '../user.service';
+import { connectDB, disconnectDB } from '../../db/db';
+import { CartModel } from '../../models/cart.model';
+import { ProductModel } from '../../models/product.model';
+import { UserModel } from '../../models/user.model';
+import { Product, User } from '../../types/types';
 
 const user = {
   email: 'examples.jones.2@epam.com',
@@ -27,10 +27,10 @@ describe('CartService Integration Tests', () => {
 
   beforeEach(async () => {
     product = await productService.addProduct({
-      name: 'apple',
+      name: 'banana',
       description: 'fresh fruit',
       category: 'fruits',
-      price: 11,
+      price: 88,
     });
     newUser = await userService.registerNewUser(user);
   });
@@ -64,7 +64,7 @@ describe('CartService Integration Tests', () => {
   it('should return cart with total price 11"', async () => {
     await cartService.addProductToCart(newUser.id, product.id);
     const cart = await cartService.getTotalOrder(newUser.id);
-    expect(cart.totalPrice).toBe(11);
+    expect(cart.totalPrice).toBe(88);
   });
 
   it('should return cart with total price 33"', async () => {
@@ -72,6 +72,6 @@ describe('CartService Integration Tests', () => {
     await cartService.addProductToCart(newUser.id, product.id);
     await cartService.addProductToCart(newUser.id, product.id);
     const cart = await cartService.getTotalOrder(newUser.id);
-    expect(cart.totalPrice).toBe(33);
+    expect(cart.totalPrice).toBe(264);
   });
 });
