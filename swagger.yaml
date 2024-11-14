@@ -37,6 +37,39 @@ components:
           type: string
         email:
           type: string
+    CreateProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+        required:
+        - name
+        - description
+        - category
+        - price
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+    ArrayOfProducts:
+      type: array
+      items: 
+        $ref: '#/components/schemas/Product'
     Error:
       type: object
       properties:
@@ -53,13 +86,6 @@ paths:
     post:
       summary: register new user
       description: return registered user
-      # parameters:
-      #   - in: body
-      #     name: body
-      #     schema:
-      #       $ref: "#/components/schemas/CreateUser"
-      #     required: true
-      #     description: new user 
       tags:
         - register
       requestBody:
@@ -98,3 +124,96 @@ paths:
                 $ref: '#/components/schemas/Error'
               example: 
                 message: Email is in use
+
+  /api/products:
+    get:
+      summary: retrieve all products
+      description: return array of products
+      tags:
+        - products
+      responses:
+        '200': 
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfProducts'
+    post:
+      summary: add new product by admin
+      description: add new product by admin
+      tags:
+        - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProduct"
+            example:
+              name: kiwi
+              description: fresh fruit
+              category: fruits
+              price: 94
+      responses:
+        '200': 
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example: 
+                id: 8457a991-968e-4a77-a69d-a17bf62d0he1
+                name: kiwi
+                description: fresh fruit
+                category: fruits
+                price: 94
+        '401': 
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Unauthorized
+        '403': 
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Forbidden
+
+  /api/products/{productId}:
+    get:
+      summary: retrieve product by id
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: string
+          required: true
+          description: id of the product to get
+      tags:
+        - products
+      responses:
+        '200': 
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example: 
+                id: 4055f224-658e-4a83-a69d-a17bf62d0be1
+                name: apple
+                description: fresh fruit
+                category: fruits
+                price: 28
+        '404':
+          description: Product is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Product is not found
+   
