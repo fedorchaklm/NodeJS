@@ -37,6 +37,13 @@ components:
           type: string
         email:
           type: string
+    Credential:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
     CreateProduct:
       type: object
       properties:
@@ -125,6 +132,52 @@ paths:
               example: 
                 message: Email is in use
 
+  /api/login:
+    post:
+      summary: log user into system
+      tags:
+        - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Credential"
+            example:
+              email: examples-email.@gmail.com
+              password: a2A!abcd
+      responses:
+        '200': 
+          description: successful operation
+          headers:
+            Set-Cookie:
+              schema:
+                type: array
+                items:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+              example: 
+                id: 4055f991-968e-4a83-a69d-a17bf62d0be1
+                name: Jessica Right
+                email: examples.@gmail.com
+        '401': 
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Unauthorized
+        '500': 
+          description: No such user with such email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: No such user with such email
   /api/products:
     get:
       summary: retrieve all products
