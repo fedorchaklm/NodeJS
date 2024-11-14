@@ -1,6 +1,5 @@
 import { Cart } from '../types/types';
 import { CartModel, convert } from '../models/cart.model';
-import { HttpError } from '../common/errors';
 
 export const getCart = async (userId: string): Promise<Cart> => {
   let cart = await CartModel.findOne({ user: userId }).populate(['user', 'products']);

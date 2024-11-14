@@ -5,7 +5,6 @@ import { NextFunction, Response, Request } from "express";
 export const currentUser = (req: Request, res: Response, next: NextFunction) => {
   const userId = req.headers[USER_ID_HEADER];
   if (!userId) {
-    console.log('> currentUser');
     throw new UnauthorizedError();
   }
   return next();

@@ -12,7 +12,7 @@ export const getAllProducts = (): Promise<Array<Product>> => {
 export const getProductById = async (productId: string): Promise<Product | null> => {
   const product = await productRepository.getProductById(productId);
   if (!product) {
-    throw new NotFoundError();
+    throw new NotFoundError('Product is not found');
   }
   return product;
 };
