@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user.routes';
 import productRoutes from './routes/product.routes';
@@ -11,6 +11,27 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { connectDB, disconnectDB } from './db/db';
 import { Server } from 'http';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+import YAML from 'yamljs';
+
+// const options = {
+//   definition: {
+//     openapi: '3.0.0',
+//     info: {
+//       title: 'API',
+//       version: '1.0.0',
+//     },
+//     servers : [
+//       {
+//         url: 'http://localhost:3000',
+//       }
+//     ]
+//   },
+//   apis: ['**/*.ts'], // files containing annotations as above
+// };
+
+// const swaggerSpec = swaggerJSDoc(options);
 
 const app = express();
 
@@ -23,6 +44,9 @@ app.use(
   })
 );
 
+const spaggedDocument = YAML.load('./swagger.yaml');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(spaggedDocument));
 app.use('/api/register', userRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/products', productRoutes);

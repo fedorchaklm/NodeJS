@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: Sample Express API
+  description: API documentation for a simple Express.js application
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: local server
+
+components:
+  securitySchemes:
+    cookieAuth: 
+      type: apiKey
+      in: cookie
+      name: TOKEN 
+  schemas:
+    CreateUser: 
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - name
+        - email
+        - password
+    User: 
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+security:
+  - cookieAuth: [] 
+
+paths:
+  /api/register:
+    post:
+      summary: register new user
+      description: return registered user
+      # parameters:
+      #   - in: body
+      #     name: body
+      #     schema:
+      #       $ref: "#/components/schemas/CreateUser"
+      #     required: true
+      #     description: new user 
+      tags:
+        - register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUser"
+            example:
+              name: Jessica Right
+              email: examples-email.@gmail.com
+              password: a2A!abcd
+      responses:
+        '200': 
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example: 
+                id: 4055f991-968e-4a83-a69d-a17bf62d0be1
+                name: Jessica Right
+                email: examples.@gmail.com
+        '422':
+          description: email or password format is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Email or password format is invalid
+        '500': 
+          description: email is in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Email is in use
