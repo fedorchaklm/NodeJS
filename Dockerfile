@@ -6,8 +6,10 @@ COPY package*.json ./
 
 RUN npm ci
 
-ARG NODE_ENV=development
+ARG NODE_ENV=${NODE_ENV}
 ENV NODE_ENV=${NODE_ENV}
+
+RUN echo $NODE_ENV
 
 COPY . .
 

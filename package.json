@@ -5,9 +5,11 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node --esm src/index.ts",
+    "dev": "cross-env NODE_ENV=development node --loader ts-node/esm src/index.ts",
     "start": "cross-env NODE_ENV=production node --loader ts-node/esm dist/index.js",
     "test": "cross-env NODE_ENV=test jest --maxWorkers=1",
+    "dev:local": "cross-env NODE_ENV=development LOCAL=true node --loader ts-node/esm src/index.ts",
+    "test:local": "cross-env NODE_ENV=test LOCAL=true jest --maxWorkers=1",
     "build": "tsc"
   },
   "keywords": [],
