@@ -16,6 +16,5 @@ export default {
   adminName: process.env.NAME!,
   adminEmail: process.env.EMAIL!,
   adminPassword: process.env.PASSWORD!,
-  mongoDBConnection: process.env.MONGO_DB_CONNECTION!,
   mongoURI: isLocal ? process.env.MONGO_URI_LOCAL! : process.env.MONGO_URI!,
 };
