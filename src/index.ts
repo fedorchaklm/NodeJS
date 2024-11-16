@@ -9,7 +9,10 @@ import { createAdmin } from './createAdmin';
 import loginRoutes from './routes/login.routes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { connectDB } from './db/db';
+import { connectDB, disconnectDB } from './db/db';
+import { Server } from 'http';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
 const app = express();
 
@@ -22,6 +25,9 @@ app.use(
   })
 );
 
+const spaggedDocument = YAML.load('./swagger.yaml');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(spaggedDocument));
 app.use('/api/register', userRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/products', productRoutes);
@@ -29,8 +35,28 @@ app.use('/api/cart', cartRoutes);
 
 app.use(errorHandler);
 
-app.listen(config.port, () => {
-  connectDB();
-  createAdmin(config.adminPassword, config.adminName, config.adminEmail);
-  console.log(`Server is running on http://localhost:${config.port}`);
-});
+let server: Server;
+
+export const startServer = async () => {
+  await connectDB();
+  await createAdmin(config.adminPassword, config.adminName, config.adminEmail);
+  server = app.listen(config.port, () => {
+    console.log(`Server is running on http://localhost:${config.port}`);
+  });
+  return server;
+};
+
+export const stopServer = async () => {
+  if (server != null) {
+    server.close();
+  }
+  await disconnectDB();
+};
+
+console.log('>', config.environment);
+
+if (config.environment !== 'test') {
+  startServer();
+}
+
+export default app;

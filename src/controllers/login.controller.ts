@@ -1,7 +1,7 @@
 import * as userService from '../services/user.service';
 import * as authService from '../services/auth.service';
 import { NextFunction, Request, Response } from 'express';
-import { NotFoundError, UnauthorizedError } from '../common/errors';
+import { UnauthorizedError } from '../common/errors';
 
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

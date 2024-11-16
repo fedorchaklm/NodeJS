@@ -13,7 +13,11 @@ export const registerNewUser = async ({ password, name, email }): Promise<User> 
   return userRepository.addUser(newUser);
 };
 
-export const getUserByEmail = (email: string): Promise<User | null> => {
-  return userRepository.getUserByEmail(email);
+export const getUserByEmail = async (email: string): Promise<User | null> => {
+  const user = await userRepository.getUserByEmail(email);
+  if (user === null) {
+    throw new Error('No such user with such email'); 
+  }
+  return user;
 };
 

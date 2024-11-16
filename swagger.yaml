@@ -1,0 +1,272 @@
+openapi: 3.0.0
+info:
+  title: Sample Express API
+  description: API documentation for a simple Express.js application
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: local server
+
+components:
+  securitySchemes:
+    cookieAuth: 
+      type: apiKey
+      in: cookie
+      name: TOKEN 
+  schemas:
+    CreateUser: 
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - name
+        - email
+        - password
+    User: 
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+    Credential:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    CreateProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+        required:
+        - name
+        - description
+        - category
+        - price
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+    ArrayOfProducts:
+      type: array
+      items: 
+        $ref: '#/components/schemas/Product'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+security:
+  - cookieAuth: [] 
+
+paths:
+  /api/register:
+    post:
+      summary: register new user
+      description: return registered user
+      tags:
+        - register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUser"
+            example:
+              name: Jessica Right
+              email: examples-email.@gmail.com
+              password: a2A!abcd
+      responses:
+        '200': 
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example: 
+                id: 4055f991-968e-4a83-a69d-a17bf62d0be1
+                name: Jessica Right
+                email: examples.@gmail.com
+        '422':
+          description: email or password format is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Email or password format is invalid
+        '500': 
+          description: email is in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Email is in use
+
+  /api/login:
+    post:
+      summary: log user into system
+      tags:
+        - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Credential"
+            example:
+              email: examples-email.@gmail.com
+              password: a2A!abcd
+      responses:
+        '200': 
+          description: successful operation
+          headers:
+            Set-Cookie:
+              schema:
+                type: array
+                items:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+              example: 
+                id: 4055f991-968e-4a83-a69d-a17bf62d0be1
+                name: Jessica Right
+                email: examples.@gmail.com
+        '401': 
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Unauthorized
+        '500': 
+          description: No such user with such email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: No such user with such email
+  /api/products:
+    get:
+      summary: retrieve all products
+      description: return array of products
+      tags:
+        - products
+      responses:
+        '200': 
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfProducts'
+    post:
+      summary: add new product by admin
+      description: add new product by admin
+      tags:
+        - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProduct"
+            example:
+              name: kiwi
+              description: fresh fruit
+              category: fruits
+              price: 94
+      responses:
+        '200': 
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example: 
+                id: 8457a991-968e-4a77-a69d-a17bf62d0he1
+                name: kiwi
+                description: fresh fruit
+                category: fruits
+                price: 94
+        '401': 
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Unauthorized
+        '403': 
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Forbidden
+
+  /api/products/{productId}:
+    get:
+      summary: retrieve product by id
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: string
+          required: true
+          description: id of the product to get
+      tags:
+        - products
+      responses:
+        '200': 
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example: 
+                id: 4055f224-658e-4a83-a69d-a17bf62d0be1
+                name: apple
+                description: fresh fruit
+                category: fruits
+                price: 28
+        '404':
+          description: Product is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: Product is not found
+   

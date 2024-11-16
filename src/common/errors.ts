@@ -19,7 +19,7 @@ export class ForbiddenError extends HttpError {
 }
 
 export class NotFoundError extends HttpError {
-  constructor() {
-    super(404, `Product is not found`);
+  constructor(message: string) {
+    super(404, message);
   }
 }

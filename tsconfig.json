@@ -23,12 +23,12 @@
       "strict": false,
       "resolveJsonModule": true,
       "typeRoots": ["src/types", "./node_modules/@types"],
-      "baseUrl": "."
+      "baseUrl": ".",
   },
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node",
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "./src/**/*.test.ts"],
   "include": ["./src/**/*.ts"]
 }
