@@ -1,17 +1,28 @@
 # NodeJS application
 
 ## Running App in Docker
-Install docker following guide https://docs.docker.com/
+Install [Docker](https://docs.docker.com/)
 
-Available *mode* options: `production` `development` `test`
+Available *mode* options: 
+- `production` 
+- `development` 
+- `test`
 
-cross-env NODE_ENV=*mode* docker compose build
-docker compose up
+To build an image use this command<br/>
+`cross-env NODE_ENV=<mode> docker compose build`
 
-cross-env NODE_ENV=*mode* docker compose up --build
+Then you can start the container<br/>
+`docker compose up`
+
+Also you can use single command to build and run the container</br>
+`cross-env NODE_ENV=<mode> docker compose up --build`
 
 ## Running App locally
-Install mongo dababase locally and respectively configure `MONGO_URI_LOCAL` in env files
+
+Install [NodeJS](https://nodejs.org/en) <br/>
+Install Mongo dababase locally [MongoDB Compass](https://www.mongodb.com/products/tools/compass) <br/>
+Respectively configure `MONGO_URI_LOCAL` in env files<br/>
+Install packages `npm i`
 
 - `npm run dev:local` starts app on localhost `PORT` using database `MONGO_URI_LOCAL`
 
