@@ -15,24 +15,6 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import YAML from 'yamljs';
 
-// const options = {
-//   definition: {
-//     openapi: '3.0.0',
-//     info: {
-//       title: 'API',
-//       version: '1.0.0',
-//     },
-//     servers : [
-//       {
-//         url: 'http://localhost:3000',
-//       }
-//     ]
-//   },
-//   apis: ['**/*.ts'], // files containing annotations as above
-// };
-
-// const swaggerSpec = swaggerJSDoc(options);
-
 const app = express();
 
 app.use(bodyParser.json());

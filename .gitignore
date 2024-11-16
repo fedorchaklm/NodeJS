@@ -4,3 +4,4 @@ dist
 .env.production
 .env.test
 products.store.json
+coverage/
