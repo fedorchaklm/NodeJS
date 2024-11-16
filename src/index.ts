@@ -12,7 +12,6 @@ import cors from 'cors';
 import { connectDB, disconnectDB } from './db/db';
 import { Server } from 'http';
 import swaggerUi from 'swagger-ui-express';
-import swaggerJSDoc from 'swagger-jsdoc';
 import YAML from 'yamljs';
 
 const app = express();
